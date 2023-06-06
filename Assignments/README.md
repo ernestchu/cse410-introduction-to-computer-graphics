@@ -3,6 +3,7 @@
 - [HW 3](./hw3/hw3.html)([with lighting](./hw3/withLighting/hw3.html))
 - [HW 4](./hw4/hw4.html)
 
+```
 .
 ├── Common
 │   ├── InitShaders.js
@@ -24,3 +25,4 @@
 └── hw4
     ├── hw4.html
     └── hw4.js
+```
