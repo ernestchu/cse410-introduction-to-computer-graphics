@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<!--
+  Author: Ernie Chu
+-->
+
+<html>
+  <head>
+    <meta name="theme-color" content="#A80510">
+    <meta charset="utf-8">
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      attribute vec4 vPosition;
+      attribute vec4 vColor;
+      varying   vec4 fColor;
+      uniform   mat4 modelViewMatrix;
+
+      void main()
+      {
+        fColor = vColor;
+        gl_Position = modelViewMatrix * vPosition;
+      }
+    </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      precision mediump float;
+      varying vec4 fColor;
+
+      void main()
+      {
+        gl_FragColor = fColor;
+      }
+    </script>
+    <script type="text/javascript" src="../Common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../Common/initShaders.js"></script>
+    <script type="text/javascript" src="../Common/MV.js"></script>
+    <script type="text/javascript" src="hw3.js"></script>
+    <style>
+      button {
+        width: 70px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>Homework 3</h2>
+    <h3>朱劭璿 B073040018</h3>
+    <canvas id="gl-canvas" width="512" height="512">
+      Sorry, your browser does not support HTML5's canvas element.
+    </canvas>
+    <br>
+    <button id="toggle">Pause</button>
+    <button id="xButton">Rotate X</button>
+    <button id="yButton">Rotate Y</button>
+    <button id="zButton">Rotate Z</button>
+    <button id="wires">Wires</button>
+    <br>
+    <label for="speed">Rotation Speed</label>
+    <input id="speed" style="width: 30px;">deg/frame
+    <br>
+    <label for="scale">Scale</label>
+    <input id= "scale" type="range" min=0 max=2 step="any">
+    <span id="scaleIndicator">1x</span>
+  </body>
+</html>

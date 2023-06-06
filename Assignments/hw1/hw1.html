@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--
+  Author: Ernie Chu
+-->
+
+<html>
+<head>
+  <meta name="theme-color" content="#A80510">
+  <meta charset="utf-8">
+  <script id="vertex-shader" type="x-shader/x-vertex">
+    attribute vec4 vPosition;
+    void main () {
+      gl_Position = vPosition;
+    }
+  </script>
+
+  <script id="fragment-shader" type="x-shader/x-fragment">
+    precision mediump float;
+
+    void main () {
+      gl_FragColor = vec4(.54, .08, .08, 1.);
+    }
+  </script>
+
+  <script id="fragment-shader2" type="x-shader/x-fragment">
+    precision mediump float;
+
+    void main () {
+      gl_FragColor = vec4(.72, .22, .29, 1.);
+    }
+  </script>
+
+  <script type="text/javascript" src="../Common/webgl-utils.js"></script>
+  <script type="text/javascript" src="../Common/initShaders.js"></script>
+  <script type="text/javascript" src="hw1.js"></script>
+</head>
+
+<body>
+  <h2>Homework 1</h2>
+  <h3>朱劭璿 B073040018</h3>
+  <p>Try to refresh the page</p>
+  <canvas id="gl-canvas">
+    Your browser doesn't support the HTML5 canvas element.
+  </canvas>
+</body>
+</html>

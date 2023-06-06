@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<!--
+  Author: Ernie Chu
+-->
+
+<html>
+  <head>
+    <meta name="theme-color" content="#A80510">
+    <meta charset="utf-8">
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      precision mediump float;
+      attribute vec4 vPosition;
+      attribute vec3 vNormal;
+      varying   vec4 fColor;
+      varying   vec3 L1, L2, E, N;
+
+      uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+      uniform vec3 lightPosition1, lightPosition2;
+      uniform float shininess;
+      uniform bool enableLight2;
+      uniform bool enablePhong;
+      uniform mat4 projectionMatrix;
+
+      vec4 getColor(vec3 L, vec3 E, vec3 N)
+      {
+        // Halfway vector
+        vec3 H = normalize( L + E );
+
+        // Compute terms in the illumination equation
+        vec4 ambient = ambientProduct;
+
+        float Kd = max( dot(L, N), 0.0 );
+        vec4  diffuse = Kd*diffuseProduct;
+
+        float Ks = pow( max(dot(N, H), 0.0), shininess );
+        vec4  specular = Ks * specularProduct;
+        if( dot(L, N) < 0.0 ) specular = vec4(0.0, 0.0, 0.0, 1.0);
+
+        return ambient + diffuse + specular;
+      }
+
+      void main()
+      {
+        vec3 pos = -vPosition.xyz;
+        L1 = lightPosition1 - pos;
+        if (enableLight2)
+          L2 = lightPosition2 - pos;
+        E = -pos;
+        N = vNormal;
+
+        if (!enablePhong) {
+          fColor = getColor(normalize(L1), normalize(E), normalize(N));
+          if (enableLight2)
+            fColor += getColor(normalize(L2), normalize(E), normalize(N));
+          fColor.a = 1.0;
+        }
+        gl_Position = projectionMatrix * vPosition;
+      }
+    </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      precision mediump float;
+      varying vec4 fColor;
+      varying vec3 L1, L2, E, N;
+
+      uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+      uniform float shininess;
+      uniform bool enableLight2;
+      uniform bool enablePhong;
+
+      vec4 getColor(vec3 L, vec3 E, vec3 N)
+      {
+        // Halfway vector
+        vec3 H = normalize( L + E );
+
+        // Compute terms in the illumination equation
+        vec4 ambient = ambientProduct;
+
+        float Kd = max( dot(L, N), 0.0 );
+        vec4  diffuse = Kd*diffuseProduct;
+
+        float Ks = pow( max(dot(N, H), 0.0), shininess );
+        vec4  specular = Ks * specularProduct;
+        if( dot(L, N) < 0.0 ) specular = vec4(0.0, 0.0, 0.0, 1.0);
+
+        return ambient + diffuse + specular;
+      }
+
+      void main()
+      {
+        vec4 fColorPhong;
+        
+        if (enablePhong) {
+          fColorPhong = getColor(normalize(L1), normalize(E), normalize(N));
+          if (enableLight2)
+            fColorPhong += getColor(normalize(L2), normalize(E), normalize(N));
+          fColorPhong.a = 1.0;
+        }
+
+        gl_FragColor = (enablePhong)? fColorPhong: fColor;
+      }
+    </script>
+    <script type="text/javascript" src="../Common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../Common/initShaders.js"></script>
+    <script type="text/javascript" src="../Common/MV.js"></script>
+    <script type="text/javascript" src="hw4.js"></script>
+    <style>
+      label {
+        display:inline-block;
+        width: 160px;
+      }
+      .radio label {
+        display:inline-block;
+        width: 60px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>Homework 4</h2>
+    <h3>朱劭璿 B073040018</h3>
+    <canvas id="gl-canvas" width="512" height="512">
+      Sorry, your browser does not support HTML5's canvas element.
+    </canvas>
+    <div style="display: inline-block; vertical-align: top;">
+      <label>Shading</label>
+      <span class="radio">
+        <input id="gouraud" value="gouraud" type="radio" name="shading">
+        <label for="gouraud">Gouraud</label>
+        <input id="phong" value="phong" type="radio" name="shading" checked>
+        <label for="phong">Phong</label>
+      </span>
+      <br>
+      <label for="subdivision">Level of Subdivision</label>
+      <input id= "subdivision" type="range" value="5" min=0 max=7 step="1">
+      <span id="subdivisionIndicator">5</span>
+      <br>
+      <label for="scale">Scale</label>
+      <input id= "scale" type="range" value=2 min=0 max=2 step="any">
+      <span id="scaleIndicator">2.00x</span>
+      <br>
+      <label for="shininess">Material Shininess</label>
+      <input id= "shininess" type="range" value="100" min=50 max=1000 step="10">
+      <span id="shininessIndicator">100</span>
+      <br>
+      <label for="lightDirection1">Direction of Light 1</label>
+      <input id= "lightDirection1" type="range" value="45" min=0 max=360 step="1">
+      <span id="lightDirection1Indicator">45</span>
+      <br>
+      <input type="checkbox" id="lightDirection2Toggle">
+      <label for="lightDirection2Toggle" style="width: 140px;">Direction of Light 2</label>
+      <input id= "lightDirection2" type="range" value="300" min=0 max=360 step="1">
+      <span id="lightDirection2Indicator">300</span>
+      <br>
+      <label>Material</label>
+      <span class="radio">
+        <input id="plastic" value="plastic" type="radio" name="material" checked>
+        <label for="plastic">Plastic</label>
+        <input id="metal" value="metal" type="radio" name="material">
+        <label for="metal">Metal</label>
+        <input id="carbon" value="carbon" type="radio" name="material">
+        <label for="carbon">Carbon</label>
+      </span>
+    </div>
+  </body>
+</html>
