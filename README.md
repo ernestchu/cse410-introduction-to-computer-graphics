@@ -7,7 +7,7 @@
 
 ## Contents
 ### Assignments
-The assignments is written in WebGL. You can find more detail in the [Assignments](Assignments) directory.
+The assignments is written in WebGL. You can find more detail in the [Assignments](Assignments) directory or checkout some fun [demo](https://ernestchu.github.io/cse410-introduction-to-computer-graphics/Assignments/).
 
 ### Materials
 The materials used in this course include slides and textbooks. The slides are not provided due to the copyright issue. Here's the textbooks list.
